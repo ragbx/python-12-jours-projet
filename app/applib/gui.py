@@ -10,6 +10,12 @@ import tkinter.ttk as ttk
 import os  # pour manipulation des chemins
 # fin declaration des paquets
 
+def get_labels():
+    filename = "data/input/labels/labels.txt"
+    with open(filename, "r", encoding="UTF8") as fh:
+        labels = fh.read().splitlines()
+    return labels
+
 class get_gui(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -74,7 +80,7 @@ class get_gui(tk.Frame):
                              side=tk.TOP,
                              fill=tk.BOTH,
                              expand=1)
-        self.image_manager_labels_list = ttk.Combobox(master=self.image_manager_labels, values=["ligne 1", "ligne 2", "ligne 3", "ligne 4"])
+        self.image_manager_labels_list = ttk.Combobox(master=self.image_manager_labels, values=get_labels())
         self.image_manager_labels_list.pack()
 
         # on imbrique un second élément pour sauvegarder les résultats
@@ -133,5 +139,6 @@ class get_gui(tk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    monapp = gui(master=root)
+    monapp = get_gui(master=root)
     root.mainloop()
+
