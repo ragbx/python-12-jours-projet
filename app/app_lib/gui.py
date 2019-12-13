@@ -16,7 +16,7 @@ def get_labels():
         labels = fh.read().splitlines()
     return labels
 
-class get_gui(tk.Frame):
+class GetGui(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
@@ -32,8 +32,7 @@ class get_gui(tk.Frame):
             text="Application 12 jours",
             font=("Arial", 16)
             )
-        self.main_frame_title.pack(side=tk.TOP, fill=tk.BOTH, 
-                            expand=0)
+        self.main_frame_title.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
 
         self.create_image_navigator()
         self.create_image_manager()
@@ -42,29 +41,24 @@ class get_gui(tk.Frame):
     # on crée le cadre dans lequel apparaîtra l'image
     def create_image_navigator(self):
         self.image_navigator = tk.Frame(master=self.main_frame)
-        self.image_navigator.pack(side=tk.LEFT, fill=tk.BOTH, 
-        expand=1)
+        self.image_navigator.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
         # elements de image_navigator
         self.image_navigator_zone_affichage_text = stext.ScrolledText(
-            master=self.image_navigator
-        )
-        self.image_navigator_zone_affichage_text.pack(
-                side=tk.LEFT,
-                fill=tk.BOTH,
-                expand=1
-        )
+                master=self.image_navigator)
+        self.image_navigator_zone_affichage_text.pack(side=tk.LEFT,
+                                                      fill=tk.BOTH, expand=1)
 
     # on crée le cadre dans lequel on mettra les boutons
     def create_image_manager(self):
         # on crée un cadre
         self.image_manager = tk.Frame(master=self.main_frame, width=200)
-        
+
         self.image_manager.pack(
                 side=tk.RIGHT,
-                #fill=tk.BOTH, 
+                #fill=tk.BOTH,
                 expand=1)
-        
+
 
         # on imbrique un premier élément pour gérer les labels
         self.image_manager_labels = tk.Frame(master=self.image_manager)
@@ -135,10 +129,9 @@ class get_gui(tk.Frame):
 
         # fin des elements de image_navigator
 
-    
+
 
 if __name__ == "__main__":
     root = tk.Tk()
-    monapp = get_gui(master=root)
+    monapp = GetGui(master=root)
     root.mainloop()
-

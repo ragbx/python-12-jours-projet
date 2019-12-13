@@ -1,8 +1,13 @@
+"""
+Ce script permet de lancer l'application.
+Il doit être exécuter depuis la racine du projet.
+"""
+
 import tkinter as tk
 
-import applib.gui as g
+import app_lib.gui as g
 
 
-root = tk.Tk()
-monapp = g.get_gui(master=root)
-root.mainloop()
+MASTER = tk.Tk()
+g.GetGui(master=MASTER)
+MASTER.mainloop()
