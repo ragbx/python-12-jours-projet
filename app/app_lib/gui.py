@@ -132,6 +132,6 @@ class GetGui(tk.Frame):
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    monapp = GetGui(master=root)
-    root.mainloop()
+    MASTER = tk.Tk()
+    GetGui(master=MASTER)
+    MASTER.mainloop()
