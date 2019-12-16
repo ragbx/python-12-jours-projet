@@ -3,7 +3,7 @@ from tkinter import scrolledtext as stext
 import tkinter.ttk as ttk
 import tkinter.filedialog as fdia
 import os  # pour manipulation des chemins
-from Pillow import Image, ImageTk
+from PIL import Image, ImageTk
 
 
 
@@ -44,7 +44,7 @@ class GetGui(tk.Frame):
     def create_image_manager(self):
         # on crée une liste dans laquelle on stockera les chemins des images
         self.images_files_pathes = []
-    
+
         # on crée un cadre
         self.image_manager = tk.Frame(master=self.main_frame, width=200)
 
@@ -68,7 +68,7 @@ class GetGui(tk.Frame):
                              side=tk.TOP,
                              fill=tk.BOTH,
                              expand=1)
-                             
+
         self.get_labels() # on récupère les intitulés des labels
         self.image_manager_labels_list = ttk.Combobox(master=self.image_manager_labels, values=self.labels)
         self.image_manager_labels_list.pack()
@@ -122,42 +122,39 @@ class GetGui(tk.Frame):
                              expand=1)
 
         # fin des elements de image_navigator
-        
+
     def get_labels(self):
         filename = "data/input/labels/labels.txt"
         with open(filename, "r", encoding="UTF8") as fh:
             self.labels = fh.read().splitlines()
-            
+
     def get_image_file_path(self):
         self.image_file_path = fdia.askopenfilename(title = "Choisir un fichier", filetypes=[("PNG","*.png"), ("JPEG", "*.jp*g")])
         self.images_files_pathes.append(self.image_file_path)
         self.get_image_file_name()
         self.image_manager_listbox.insert(tk.END, self.image_file_name)
-        
+
     def get_image_file_name(self):
         el = self.image_file_path.split("/")
         self.image_file_name = el[-1]
-        
-        
+
+
     def del_image_file_path(self):
         image_index_in_listbox = self.image_manager_listbox.curselection()
         if image_index_in_listbox:
             self.image_manager_listbox.delete(image_index_in_listbox)
             self.images_files_pathes.pop(image_index_in_listbox[0])
-        
+
     def load_image(self):
         index_image_to_load = self.image_manager_listbox.curselection()
         file_path = self.images_files_pathes[index_image_to_load[0]]
         img = Image.open(file_path)
         image = ImageTk.PhotoImage(img)
-        self.img_widget = tk.Label(self.image_navigator, image=img)
+        self.img_widget = tk.Label(self.image_navigator_zone_affichage, image=image)
+        self.img_widget.image = image
         self.img_widget.pack()
-        
-        
-        imagesprite = self.image_navigator_zone_affichage.create_image(200,200,image=image)
 
 
-        
 if __name__ == "__main__":
     MASTER = tk.Tk()
     GetGui(master=MASTER)
