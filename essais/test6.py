@@ -34,23 +34,22 @@ class GetGui(tk.Frame):
     # on crée le cadre dans lequel apparaîtra l'image
     def create_image_navigator(self):
         self.image_navigator = tk.Frame(master=self.main_frame)
-        self.image_navigator.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
 
         # elements de image_navigator
         self.image_navigator_zone_affichage = tk.Canvas(
-                master=self.image_navigator, width=700, height=500, bd=2, relief='sunken',scrollregion=(0,0,2000,2000))
+                master=self.image_navigator, width=700, height=500, bd=2, relief='sunken', scrollregion=(0,0,500,500))
+        self.image_navigator_zone_affichage.pack(fill=tk.BOTH, expand=1)
 
         # gestion des scrollbars
-        hbar=tk.Scrollbar(self.image_navigator,orient='horizontal')
-        hbar.pack(side=tk.BOTTOM,fill=tk.X)
-        hbar.config(command=self.image_navigator_zone_affichage.xview)
+        defilX = tk.Scrollbar(self.image_navigator, orient='horizontal')
+        defilY = tk.Scrollbar(self.image_navigator, orient='vertical')
 
-        vbar=tk.Scrollbar(self.image_navigator,orient='vertical')
-        vbar.pack(side=tk.RIGHT,fill=tk.Y)
-        vbar.config(command=self.image_navigator_zone_affichage.yview)
-        self.image_navigator_zone_affichage.config(xscrollcommand=hbar.set, yscrollcommand=vbar.set)
-        self.image_navigator_zone_affichage.pack(side=tk.LEFT,expand=True,fill=tk.BOTH)
+        defilX.pack(fill=tk.X, expand=1)
+        defilY.pack(fill=tk.Y, expand=1)
+        self.image_navigator_zone_affichage['yscrollcommand'] = defilY.set
+
+        self.image_navigator.pack(fill=tk.BOTH, expand=1)
 
     # on crée le cadre dans lequel on mettra les boutons
     def create_image_manager(self):
