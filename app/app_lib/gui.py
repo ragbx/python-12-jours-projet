@@ -9,9 +9,8 @@ from PIL import Image, ImageTk
 
 # fin declaration des paquets
 
-class GetGui(tk.Frame):
+class GetGui:
     def __init__(self, master=None):
-        super().__init__(master)
         self.master = master
         self.create_main_frame()
 
@@ -39,7 +38,11 @@ class GetGui(tk.Frame):
 
         # elements de image_navigator
         self.image_navigator_zone_affichage = tk.Canvas(
-                master=self.image_navigator, width=700, height=500, bd=2, relief='sunken',scrollregion=(0,0,2000,2000))
+                                master=self.image_navigator,
+                                width=700, height=500,
+                                bd=2, relief='sunken',
+                                scrollregion=(0,0,2000,2000),
+                                cursor="cross")
 
         # gestion des scrollbars
         hbar=tk.Scrollbar(self.image_navigator,orient='horizontal')
@@ -86,7 +89,7 @@ class GetGui(tk.Frame):
         self.image_manager_labels_list.pack()
 
         # on imbrique un second élément pour sauvegarder les résultats
-        self.image_manager_save=tk.Button(master=self.image_manager,text="Sauvegarder",font=("Arial",12))
+        self.image_manager_save=tk.Button(master=self.image_manager,text="Sauvegarder",font=("Arial",12), command=self.get_coord)
         self.image_manager_save.pack(
                              side=tk.TOP,
                              fill=tk.BOTH,
@@ -165,6 +168,48 @@ class GetGui(tk.Frame):
         self.image_navigator_zone_affichage.create_image((0,0), image=image, anchor=tk.NW)
         self.image_navigator_zone_affichage.image = image
         self.image_navigator_zone_affichage.pack()
+        self.get_image_coord()
+
+    def get_image_coord(self):
+        self.x = self.y = 0
+        self.image_navigator_zone_affichage.bind("<ButtonPress-1>", self.on_button_press)
+        self.image_navigator_zone_affichage.bind("<B1-Motion>", self.on_move_press)
+        self.image_navigator_zone_affichage.bind("<ButtonRelease-1>", self.on_button_release)
+
+        self.rect = None
+
+        self.start_x = None
+        self.start_y = None
+
+
+    def on_button_press(self, event):
+        # save mouse drag start position
+        self.start_x = event.x
+        self.start_y = event.y
+
+        self.coord = {"start_x": self.start_x, "start_y": self.start_y}
+        # create rectangle if not yet exist
+        #if not self.rect:
+        self.rect = self.image_navigator_zone_affichage.create_rectangle(self.x, self.y, 1, 1, outline='red', width=2, fill=None)
+
+    def on_move_press(self, event):
+        curX, curY = (event.x, event.y)
+
+        # expand rectangle as you drag the mouse
+        self.image_navigator_zone_affichage.coords(self.rect, self.start_x, self.start_y, curX, curY)
+
+    def on_button_release(self, event):
+        self.stop_x = event.x
+        self.stop_y = event.y
+
+        self.coord["stop_x"] = self.stop_x
+        self.coord["stop_y"] = self.stop_y
+
+    def get_coord(self):
+        if hasattr(self, "coord"):
+            print(self.coord)
+
+
 
 
 if __name__ == "__main__":
