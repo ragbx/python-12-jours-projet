@@ -4,12 +4,15 @@ import tkinter.ttk as ttk
 import tkinter.filedialog as fdia
 import os  # pour manipulation des chemins
 from PIL import Image, ImageTk
+import json
 
 
 
 # fin declaration des paquets
 
 class GetGui:
+
+    #rectangle_index = 0
     def __init__(self, master=None):
         self.master = master
         self.create_main_frame()
@@ -89,7 +92,7 @@ class GetGui:
         self.image_manager_labels_list.pack()
 
         # on imbrique un second élément pour sauvegarder les résultats
-        self.image_manager_save=tk.Button(master=self.image_manager,text="Sauvegarder",font=("Arial",12), command=self.get_coord)
+        self.image_manager_save=tk.Button(master=self.image_manager,text="Sauvegarder",font=("Arial",12), command=self.save_coord)
         self.image_manager_save.pack(
                              side=tk.TOP,
                              fill=tk.BOTH,
@@ -144,7 +147,10 @@ class GetGui:
             self.labels = fh.read().splitlines()
 
     def get_image_file_path(self):
-        self.image_file_path = fdia.askopenfilename(title = "Choisir un fichier", filetypes=[("PNG","*.png"), ("JPEG", "*.jp*g")])
+        self.image_file_path = fdia.askopenfilename(
+                    title = "Choisir un fichier",
+                    filetypes=[("PNG","*.png"), ("JPEG", "*.jp*g")],
+                    initialdir='data/input/img')
         self.images_files_pathes.append(self.image_file_path)
         self.get_image_file_name()
         self.image_manager_listbox.insert(tk.END, self.image_file_name)
@@ -162,12 +168,13 @@ class GetGui:
 
     def load_image(self):
         index_image_to_load = self.image_manager_listbox.curselection()
-        file_path = self.images_files_pathes[index_image_to_load[0]]
-        img = Image.open(file_path)
+        self.selected_image_filepath = self.images_files_pathes[index_image_to_load[0]]
+        img = Image.open(self.selected_image_filepath)
         image = ImageTk.PhotoImage(img)
         self.image_navigator_zone_affichage.create_image((0,0), image=image, anchor=tk.NW)
         self.image_navigator_zone_affichage.image = image
         self.image_navigator_zone_affichage.pack()
+        self.image_rectangle_index = 0
         self.get_image_coord()
 
     def get_image_coord(self):
@@ -178,6 +185,9 @@ class GetGui:
 
         self.rect = None
 
+        self.rectangles_coord = []
+        self.rectangle_coord = {}
+
         self.start_x = None
         self.start_y = None
 
@@ -187,7 +197,17 @@ class GetGui:
         self.start_x = event.x
         self.start_y = event.y
 
-        self.coord = {"start_x": self.start_x, "start_y": self.start_y}
+        self.rectangle_coord = {
+            "bbox": {
+                "topLeft": {
+                    "x": self.start_x,
+                    "y": self.start_y
+                },
+                "bottomRight": {}
+            },
+            "label": "",
+            "index": ""
+        }
         # create rectangle if not yet exist
         #if not self.rect:
         self.rect = self.image_navigator_zone_affichage.create_rectangle(self.x, self.y, 1, 1, outline='red', width=2, fill=None)
@@ -202,12 +222,22 @@ class GetGui:
         self.stop_x = event.x
         self.stop_y = event.y
 
-        self.coord["stop_x"] = self.stop_x
-        self.coord["stop_y"] = self.stop_y
+        self.rectangle_coord["bbox"]["bottomRight"]["x"] = self.stop_x
+        self.rectangle_coord["bbox"]["bottomRight"]["y"] = self.stop_y
+        self.rectangle_coord["label"] = self.image_manager_labels_list.get()
+        self.rectangle_coord["index"] = self.image_rectangle_index
+        self.rectangles_coord.append(self.rectangle_coord)
+        self.image_rectangle_index += 1
 
-    def get_coord(self):
-        if hasattr(self, "coord"):
-            print(self.coord)
+    def save_coord(self):
+        if hasattr(self, "rectangles_coord"):
+            data_out = {
+                "proprietes": self.rectangles_coord,
+                "chemin_image": self.selected_image_filepath
+            }
+            file_out = fdia.asksaveasfilename(filetypes=[('JSON', '*.json')], defaultextension='.json', initialdir='data/output')
+            with open(file_out, 'w', encoding='utf-8') as fo:
+                json.dump(data_out, fo, indent=4)
 
 
 

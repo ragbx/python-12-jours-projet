@@ -1,0 +1,47 @@
+{
+    "proprietes": [
+        {
+            "bbox": {
+                "topLeft": {
+                    "x": 353,
+                    "y": 127
+                },
+                "bottomRight": {
+                    "x": 494,
+                    "y": 338
+                }
+            },
+            "label": "enfant",
+            "index": 0
+        },
+        {
+            "bbox": {
+                "topLeft": {
+                    "x": 37,
+                    "y": 139
+                },
+                "bottomRight": {
+                    "x": 112,
+                    "y": 251
+                }
+            },
+            "label": "adulte",
+            "index": 1
+        },
+        {
+            "bbox": {
+                "topLeft": {
+                    "x": 53,
+                    "y": 302
+                },
+                "bottomRight": {
+                    "x": 235,
+                    "y": 387
+                }
+            },
+            "label": "chien",
+            "index": 2
+        }
+    ],
+    "chemin_image": "/home/fpichenot/dev/python-12-jours-projet/data/input/img/bruegel_hunters_detail.png"
+}
