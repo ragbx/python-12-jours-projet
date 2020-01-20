@@ -42,7 +42,7 @@ class GetGui:
         # elements de image_navigator
         self.image_navigator_zone_affichage = tk.Canvas(
                                 master=self.image_navigator,
-                                width=700, height=500,
+                                #width=700, height=500,
                                 bd=2, relief='sunken',
                                 scrollregion=(0,0,2000,2000),
                                 cursor="cross")

@@ -3,12 +3,12 @@
         {
             "bbox": {
                 "topLeft": {
-                    "x": 353,
-                    "y": 127
+                    "x": 193,
+                    "y": 113
                 },
                 "bottomRight": {
-                    "x": 494,
-                    "y": 338
+                    "x": 296,
+                    "y": 240
                 }
             },
             "label": "enfant",
@@ -17,30 +17,16 @@
         {
             "bbox": {
                 "topLeft": {
-                    "x": 37,
-                    "y": 139
+                    "x": 483,
+                    "y": 42
                 },
                 "bottomRight": {
-                    "x": 112,
-                    "y": 251
+                    "x": 557,
+                    "y": 305
                 }
             },
-            "label": "adulte",
+            "label": "arbre",
             "index": 1
-        },
-        {
-            "bbox": {
-                "topLeft": {
-                    "x": 53,
-                    "y": 302
-                },
-                "bottomRight": {
-                    "x": 235,
-                    "y": 387
-                }
-            },
-            "label": "chien",
-            "index": 2
         }
     ],
     "chemin_image": "/home/fpichenot/dev/python-12-jours-projet/data/input/img/bruegel_hunters_detail.png"
