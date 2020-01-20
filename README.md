@@ -6,3 +6,8 @@ Pour lancer l'application, se placer à la racine du projet et exécuter la comm
 ```bash
 python3 app/app.py
 ```
+
+La liste des étiquettes est définie par le fichier suivant :
+```
+data/input/labels/labels.txt
+```
