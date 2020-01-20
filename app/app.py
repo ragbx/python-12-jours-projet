@@ -64,7 +64,7 @@ class GetGui:
                                            bd=2,
                                            relief='sunken',
                                            scrollregion=(0,0,2000,2000),
-                                            cursor="cross")
+                                           cursor="cross")
 
         # gestion des scrollbars
         hbar=tk.Scrollbar(self.image_displayer,orient='horizontal')
