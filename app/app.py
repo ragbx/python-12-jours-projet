@@ -193,8 +193,8 @@ class GetGui:
         Méthode qui permet de récuperer les labels sous forme de liste
         depuis un fichier de configuration.
         """
-        filename = "data/input/labels/labels.txt"
-        with open(filename, "r", encoding="UTF8") as fh:
+        filepath = os.path.join("data/input/labels", "labels.txt")
+        with open(filepath, "r", encoding="UTF8") as fh:
             self.labels = fh.read().splitlines()
 
     def get_image_file_path(self):
