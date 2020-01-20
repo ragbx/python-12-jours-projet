@@ -1,157 +1,207 @@
 """
-Ce script permet de lancer l'application.
-Il doit être exécuter depuis la racine du projet.
+Ce fichier contient une seule et unique classe qui de créer une
+interface de graphique et de gérer les actions demandées en
+spécification.
+Il permet également de lancer l'application.
 """
 
 import tkinter as tk  # nécessaire pour interface graphique
-from tkinter import scrolledtext as stext
-import tkinter.ttk as ttk
-import tkinter.filedialog as fdia
+from tkinter import scrolledtext as stext # gestion du scroll
+import tkinter.ttk as ttk # gestion Combobox
+import tkinter.filedialog as fdia # gestion des dialogues fichiers
 import os  # pour manipulation des chemins
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk # gestion des images
 import json
 
 
-
-# fin declaration des paquets
-
 class GetGui:
+    """
+    La classe GetGui permet de créer une interface de graphique et
+    de gérer les actions demandées en spécification.
+    Elle prend en entrée un objet tkinter.
+    """
 
-    #rectangle_index = 0
     def __init__(self, master=None):
+        """
+        Méthode qui instancie un objet à partir de la classe GetGui.
+        """
         self.master = master
         self.create_main_frame()
 
-    # On crée le cadre principal
     def create_main_frame(self):
-        self.main_frame = tk.Frame(master=self.master, padx=10, pady=10)
+        """
+        Méthode qui crée le cadre principal, lui-même composé d'un
+        cadre dans lequel s'affichera l'image et d'un autre comprenant
+        l'interface de gestion.
+        """
+        self.main_frame = tk.Frame(
+                              master=self.master,
+                              padx=10,
+                              pady=10)
         self.main_frame.pack(fill=tk.BOTH, expand=1)
 
-        # les elements de cadre principal
-        self.main_frame_title = tk.Label(master=self.main_frame,
-            text="Application 12 jours",
-            font=("Arial", 16)
-            )
+        # les élémements de cadre principal
+        self.main_frame_title = tk.Label(
+                                    master=self.main_frame,
+                                    text="Application 12 jours",
+                                    font=("Arial", 16))
         self.main_frame_title.pack(side=tk.TOP, fill=tk.BOTH, expand=0)
 
-        self.create_image_navigator()
+        self.create_image_displayer()
         self.create_image_manager()
 
+    def create_image_displayer(self):
+        """
+        Méthode qui permet de créer le cadre dans lequel apparaîtra
+        l'image
+        """
+        self.image_displayer = tk.Frame(master=self.main_frame)
+        self.image_displayer.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
 
-    # on crée le cadre dans lequel apparaîtra l'image
-    def create_image_navigator(self):
-        self.image_navigator = tk.Frame(master=self.main_frame)
-        self.image_navigator.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-
-
-        # elements de image_navigator
-        self.image_navigator_zone_affichage = tk.Canvas(
-                                master=self.image_navigator,
-                                #width=700, height=500,
-                                bd=2, relief='sunken',
-                                scrollregion=(0,0,2000,2000),
-                                cursor="cross")
+        # elements de image_displayer
+        self.image_displayer_zone_affichage = tk.Canvas(
+                                           master=self.image_displayer,
+                                           bd=2,
+                                           relief='sunken',
+                                           scrollregion=(0,0,2000,2000),
+                                            cursor="cross")
 
         # gestion des scrollbars
-        hbar=tk.Scrollbar(self.image_navigator,orient='horizontal')
+        hbar=tk.Scrollbar(self.image_displayer,orient='horizontal')
         hbar.pack(side=tk.BOTTOM,fill=tk.X)
-        hbar.config(command=self.image_navigator_zone_affichage.xview)
+        hbar.config(command=self.image_displayer_zone_affichage.xview)
 
-        vbar=tk.Scrollbar(self.image_navigator,orient='vertical')
+        vbar=tk.Scrollbar(self.image_displayer,orient='vertical')
         vbar.pack(side=tk.RIGHT,fill=tk.Y)
-        vbar.config(command=self.image_navigator_zone_affichage.yview)
-        self.image_navigator_zone_affichage.config(xscrollcommand=hbar.set, yscrollcommand=vbar.set)
-        self.image_navigator_zone_affichage.pack(side=tk.LEFT,expand=True,fill=tk.BOTH)
+        vbar.config(command=self.image_displayer_zone_affichage.yview)
+        self.image_displayer_zone_affichage.config(
+                                                xscrollcommand=hbar.set,
+                                                yscrollcommand=vbar.set)
+        self.image_displayer_zone_affichage.pack(
+                                                side=tk.LEFT,
+                                                expand=True,
+                                                fill=tk.BOTH)
 
-    # on crée le cadre dans lequel on mettra les boutons
     def create_image_manager(self):
-        # on crée une liste dans laquelle on stockera les chemins des images
+        """
+        Méthode qui gère le cadre dans lequel apparaîtront
+        les boutons de gestion.
+        """
+        # on crée une liste pour stocker les chemins des images
         self.images_files_pathes = []
 
         # on crée un cadre
         self.image_manager = tk.Frame(master=self.main_frame, width=200)
-
         self.image_manager.pack(
-                side=tk.RIGHT,
-                fill=tk.Y,
-                expand=1)
+                               side=tk.RIGHT,
+                               fill=tk.Y,
+                               expand=1)
 
 
         # on imbrique un premier élément pour gérer les labels
         self.image_manager_labels = tk.Frame(master=self.image_manager)
         self.image_manager_labels.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
-        self.image_manager_labels_title = tk.Label(master=self.image_manager_labels,
-            text="Etiquettes",
-            font=("Arial", 12)
-            )
+                                      side=tk.TOP,
+                                      fill=tk.BOTH,
+                                      expand=1)
+        self.image_manager_labels_title = tk.Label(
+                                       master=self.image_manager_labels,
+                                       text="Etiquettes",
+                                       font=("Arial", 12))
         self.image_manager_labels_title.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
+                                            side=tk.TOP,
+                                            fill=tk.BOTH,
+                                            expand=1)
 
         self.get_labels() # on récupère les intitulés des labels
-        self.image_manager_labels_list = ttk.Combobox(master=self.image_manager_labels, values=self.labels)
+        self.image_manager_labels_list = ttk.Combobox(
+                                       master=self.image_manager_labels,
+                                       values=self.labels)
         self.image_manager_labels_list.pack()
 
         # on imbrique un second élément pour sauvegarder les résultats
-        self.image_manager_save=tk.Button(master=self.image_manager,text="Sauvegarder",font=("Arial",12), command=self.save_coord)
+        self.image_manager_save=tk.Button(
+                                       master=self.image_manager,
+                                       text="Sauvegarder",
+                                       font=("Arial",12),
+                                       command=self.save_coord)
         self.image_manager_save.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
+                                    side=tk.TOP,
+                                    fill=tk.BOTH,
+                                    expand=1)
 
-        # on imbrique un troisième élément pour gérer la liste des images
+        # on imbrique un 3e élément pour gérer la liste des images
         self.image_manager_list = tk.Frame(master=self.image_manager)
         self.image_manager_list.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
+                                    side=tk.TOP,
+                                    fill=tk.BOTH,
+                                    expand=1)
 
-        self.image_manager_list_title = tk.Label(master=self.image_manager_list,
-            text="Liste d'images",
-            font=("Arial", 12)
-            )
+        self.image_manager_list_title = tk.Label(
+                                         master=self.image_manager_list,
+                                         text="Liste d'images",
+                                         font=("Arial", 12))
+
         self.image_manager_list_title.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
+                                          side=tk.TOP,
+                                          fill=tk.BOTH,
+                                          expand=1)
 
-        self.image_manager_listbox = tk.Listbox(master=self.image_manager_list)#stext.ScrolledText(master=self.image_manager_list)
+        self.image_manager_listbox = tk.Listbox(
+                                         master=self.image_manager_list)
         self.image_manager_listbox.pack(
-                side=tk.TOP,
-                fill=tk.BOTH,
-                expand=1
-        )
+                                       side=tk.TOP,
+                                       fill=tk.BOTH,
+                                       expand=1)
 
-        self.image_manager_list_add=tk.Button(master=self.image_manager_list,text="Ajouter",font=("Arial",12), command=self.get_image_file_path)
+        self.image_manager_list_add=tk.Button(
+                                       master=self.image_manager_list,
+                                       text="Ajouter",
+                                       font=("Arial",12),
+                                       command=self.get_image_file_path)
         self.image_manager_list_add.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
+                                        side=tk.TOP,
+                                        fill=tk.BOTH,
+                                        expand=1)
 
-        self.image_manager_list_load=tk.Button(master=self.image_manager_list,text="Charger",font=("Arial",12), command=self.load_image)
+        self.image_manager_list_load=tk.Button(
+                                         master=self.image_manager_list,
+                                         text="Charger",
+                                         font=("Arial",12),
+                                         command=self.load_image)
+
         self.image_manager_list_load.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
+                                         side=tk.TOP,
+                                         fill=tk.BOTH,
+                                         expand=1)
 
-        self.image_manager_list_delete=tk.Button(master=self.image_manager_list,text="Supprimer",font=("Arial",12), command=self.del_image_file_path)
+        self.image_manager_list_delete=tk.Button(
+                                       master=self.image_manager_list,
+                                       text="Supprimer",
+                                       font=("Arial",12),
+                                       command=self.del_image_file_path)
+
         self.image_manager_list_delete.pack(
-                             side=tk.TOP,
-                             fill=tk.BOTH,
-                             expand=1)
+                                           side=tk.TOP,
+                                           fill=tk.BOTH,
+                                           expand=1)
 
-        # fin des elements de image_navigator
+        # fin des elements de image_displayer
 
     def get_labels(self):
+        """
+        Méthode qui permet de récuperer les labels sous forme de liste
+        depuis un fichier de configuration.
+        """
         filename = "data/input/labels/labels.txt"
         with open(filename, "r", encoding="UTF8") as fh:
             self.labels = fh.read().splitlines()
 
     def get_image_file_path(self):
+        """
+        Méthode qui permet de récupérer les chemins des images et de
+        les ajouter à une boîte de dialogue "listbox".
+        """
         self.image_file_path = fdia.askopenfilename(
                     title = "Choisir un fichier",
                     filetypes=[("PNG","*.png"), ("JPEG", "*.jp*g")],
@@ -161,32 +211,57 @@ class GetGui:
         self.image_manager_listbox.insert(tk.END, self.image_file_name)
 
     def get_image_file_name(self):
+        """
+        Méthode qui permet de récupérer le dernier chemin spécifier
+        au sein d'une liste de chemins.
+        """
         el = self.image_file_path.split("/")
         self.image_file_name = el[-1]
 
 
     def del_image_file_path(self):
+        """
+        Méthode qui permet de supprimer d'une boîte de dialogue
+        "listbox" un chemin de fichier sélectionné.
+        """
         image_index_in_listbox = self.image_manager_listbox.curselection()
         if image_index_in_listbox:
             self.image_manager_listbox.delete(image_index_in_listbox)
             self.images_files_pathes.pop(image_index_in_listbox[0])
 
     def load_image(self):
+        """
+        Méthode qui permet de charger dans l'afficheur d'image une
+        image dont le chemin est sélectionné dans la listbox.
+        """
         index_image_to_load = self.image_manager_listbox.curselection()
         self.selected_image_filepath = self.images_files_pathes[index_image_to_load[0]]
         img = Image.open(self.selected_image_filepath)
         image = ImageTk.PhotoImage(img)
-        self.image_navigator_zone_affichage.create_image((0,0), image=image, anchor=tk.NW)
-        self.image_navigator_zone_affichage.image = image
-        self.image_navigator_zone_affichage.pack()
+        self.image_displayer_zone_affichage.create_image(
+                                                (0,0),
+                                                image=image,
+                                                anchor=tk.NW)
+        self.image_displayer_zone_affichage.image = image
+        self.image_displayer_zone_affichage.pack()
         self.image_rectangle_index = 0
         self.get_image_coord()
 
     def get_image_coord(self):
+        """
+        Méthode qui permet de récupérer les coordonnées d'une sélection
+        au sein d'une image.
+        """
         self.x = self.y = 0
-        self.image_navigator_zone_affichage.bind("<ButtonPress-1>", self.on_button_press)
-        self.image_navigator_zone_affichage.bind("<B1-Motion>", self.on_move_press)
-        self.image_navigator_zone_affichage.bind("<ButtonRelease-1>", self.on_button_release)
+        self.image_displayer_zone_affichage.bind(
+                                                "<ButtonPress-1>",
+                                                self.on_button_press)
+        self.image_displayer_zone_affichage.bind(
+                                                "<B1-Motion>",
+                                                self.on_move_press)
+        self.image_displayer_zone_affichage.bind(
+                                                "<ButtonRelease-1>",
+                                                self.on_button_release)
 
         self.rect = None
 
@@ -198,7 +273,11 @@ class GetGui:
 
 
     def on_button_press(self, event):
-        # save mouse drag start position
+        """
+        Méthode qui spécifie, pour la méthode get_image_coord, les
+        actions à réaliser lors d'un appui sur le bouton gauche
+        de la souris.
+        """
         self.start_x = event.x
         self.start_y = event.y
 
@@ -213,17 +292,37 @@ class GetGui:
             "label": "",
             "index": ""
         }
-        # create rectangle if not yet exist
-        #if not self.rect:
-        self.rect = self.image_navigator_zone_affichage.create_rectangle(self.x, self.y, 1, 1, outline='red', width=2, fill=None)
+
+        self.rect = self.image_displayer_zone_affichage.create_rectangle(
+                                                          self.x,
+                                                          self.y,
+                                                          1,
+                                                          1,
+                                                          outline='red',
+                                                          width=2,
+                                                          fill=None)
 
     def on_move_press(self, event):
+        """
+        Méthode qui spécifie, pour la méthode get_image_coord, les
+        actions à réaliser lorsque le bouton gauche de la souris est
+        maintenu appuyé et la souris déplacée.
+        """
         curX, curY = (event.x, event.y)
 
-        # expand rectangle as you drag the mouse
-        self.image_navigator_zone_affichage.coords(self.rect, self.start_x, self.start_y, curX, curY)
+        self.image_displayer_zone_affichage.coords(
+                                            self.rect,
+                                            self.start_x,
+                                            self.start_y,
+                                            curX,
+                                            curY)
 
     def on_button_release(self, event):
+        """
+        Méthode qui spécifie, pour la méthode get_image_coord, les
+        actions à réaliser lorsque le bouton gauche de la souris est
+        relaché.
+        """
         self.stop_x = event.x
         self.stop_y = event.y
 
@@ -235,20 +334,23 @@ class GetGui:
         self.image_rectangle_index += 1
 
     def save_coord(self):
+        """
+        Méthode qui permet de sauvegarder les coordonnées de la
+        sélection dans un fichier
+        """
         if hasattr(self, "rectangles_coord"):
             data_out = {
                 "proprietes": self.rectangles_coord,
                 "chemin_image": self.selected_image_filepath
             }
-            file_out = fdia.asksaveasfilename(filetypes=[('JSON', '*.json')], defaultextension='.json', initialdir='data/output')
+            file_out = fdia.asksaveasfilename(
+                                filetypes=[('JSON', '*.json')],
+                                defaultextension='.json',
+                                initialdir='data/output')
             with open(file_out, 'w', encoding='utf-8') as fo:
                 json.dump(data_out, fo, indent=4)
-
-
-
 
 if __name__ == "__main__":
     MASTER = tk.Tk()
     GetGui(master=MASTER)
     MASTER.mainloop()
-
